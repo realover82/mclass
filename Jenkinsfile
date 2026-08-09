@@ -49,15 +49,14 @@ pipeline {
             steps {
                 // 원격 명령 실행
                 sshagent (credentials: [env.SSH_CREDENTIALS_ID]) {
-                    // sh "ssh -o StrictHostKeyChecking=no ${REMOTE_USER}@${REMOTE_HOST} 'mkdir -p ${REMOTE_DIR}'"
-                // 배포 디렉토리 생성 (없으면 생성)
-                sh "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ${REMOTE_USER}@${REMOTE_HOST} \"mkdir -p ${REMOTE_DIR}\""
-                // JAR 파일과 Dockerfile을 원격 서버로 전송
-                sh "scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ${JAR_FILE_NAME} Dockerfile ${REMOTE_USER}@${REMOTE_HOST}:${REMOTE_DIR}/"
+                    // 배포 디렉토리 생성 (없으면 생성)
+                    sh "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ${REMOTE_USER}@${REMOTE_HOST} \"mkdir -p ${REMOTE_DIR}\""
+                    // JAR 파일과 Dockerfile을 원격 서버로 전송
+                    sh "scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ${JAR_FILE_NAME} Dockerfile ${REMOTE_USER}@${REMOTE_HOST}:${REMOTE_DIR}/"
 
+                    // 원격 서버로 jar 파일 전송
+                    // sh "scp -i /var/lib/jenkins/.ssh/id_rsa ${JAR_FILE_NAME} ${REMOTE_USER}@${REMOTE_HOST}:${REMOTE_DIR}/${JAR_FILE_NAME}"
                 }
-                // 원격 서버로 jar 파일 전송
-                // sh "scp -i /var/lib/jenkins/.ssh/id_rsa ${JAR_FILE_NAME} ${REMOTE_USER}@${REMOTE_HOST}:${REMOTE_DIR}/${JAR_FILE_NAME}"
             }
         }
     }
